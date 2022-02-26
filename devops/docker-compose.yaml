@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql
+    restart: always
+    env_file: .env
+    environment:
+      - MYSQL_DATABASE=$MYSQL_DATABASE
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+    container_name: db
+    ports:
+      - "3307:3306"
+    volumes:
+      - db-config:/etc/mysql
+      - db-data:/var/lib/mysql
+    expose:
+      - "3306"
+    networks:
+      - backend
+
+  app:
+    build: .
+    env_file: .env
+    volumes:
+      - ./app:/app
+      - ./app:/node_modules
+    depends_on:
+      - db
+    networks:
+      - backend
+    links:
+      - db
+    ports:
+      - "2000:2000"
+    restart: always
+    container_name: api-node
+
+networks:
+  backend:
+volumes:
+  db-config:
+  db-data:

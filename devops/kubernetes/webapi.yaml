@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: api-node
+  labels:
+    app: api-node
+spec:
+  containers:
+  - name: api-node-container
+    image: dancairo/app-users:v3
+    ports:
+    - containerPort: 2000
+    envFrom:
+        - configMapRef:
+            name: sistema-configmap
